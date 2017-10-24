@@ -1,0 +1,140 @@
+
+(djangoEnv) catherines-MacBook-Pro:dojoNinjasDjPy catherinebose$ python manage.py shell
+Python 2.7.14 (default, Sep 25 2017, 09:53:22)
+[GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.37)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from apps.dojo_ninjas.models import *
+
+>>> Dojo.objects.all()
+<QuerySet []>
+>>> b = Dojo(name="CodingDojo Silicon Valley", city = "Mountain View", state= "CA")
+>>> Dojo.objects.all()
+<QuerySet []>
+>>> b = Dojo(name="CodingDojo Silicon Valley", city = "Mountain View", state= "CA")
+>>> b.save()
+>>> Dojo.objects.all()
+<QuerySet [Dojo Object :: CodingDojo Silicon Valley Mountain View CA]>
+>>> c= Dojo(name="CodingDojo Seattle", city = "Seattle", state= "WA")
+>>> c.save()
+>>> d= Dojo(name="CodingDojo New York", city = "New York", state= "NY")
+>>> d.save()
+>>> e= Ninja(first_name="Isaac", last_name = "Newton")
+>>> e.save()
+Traceback (most recent call last):
+//Foreign key value cannot be null hence  dojo = models.ForeignKey(Dojo, related_name="ninjas", null=True)
+IntegrityError: NOT NULL constraint failed: dojo_ninjas_ninja.dojo_id
+>>> e= Ninja(first_name="Isaac", last_name = "Newton")
+>>> e.save()
+>>> Ninja.objects.all()
+<QuerySet []>
+Interrupt
+>>>
+(djangoEnv) catherines-MacBook-Pro:dojoNinjasDjPy catherinebose$ python manage.py shell
+Python 2.7.14 (default, Sep 25 2017, 09:53:22)
+[GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.37)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from apps dojo_ninjas.models import *
+  File "<console>", line 1
+    from apps dojo_ninjas.models import *
+                        ^
+SyntaxError: invalid syntax
+>>> from apps.dojo_ninjas.models import *
+>>> Ninja.objects.create(first_name="Newton",last_name="Isaac")
+ninja object:: Newton Isaac
+>>> Ninja.objects.create(first_name="Newton",last_name="Isaac")
+ninja object:: Newton Isaac
+>>> Dojo.objects.first().ninjas.all()
+<QuerySet []>
+>>> Ninja.objects.create(first_name="Mary",last_name="smith")
+ninja object:: Mary smith
+>>> ninja.objects.all()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'ninja' is not defined
+>>> Ninja.objects.all()
+<QuerySet [ninja object:: Newton Isaac , ninja object:: Newton Isaac , ninja object:: Mary smith ]>
+>>> Dojo.objects.all()
+<QuerySet [Dojo Object :: CodingDojo Silicon Valley Mountain View CA, Dojo Object :: CodingDojo SeattleSeattle WA, Dojo Object :: CodingDojo New York New York NY]>
+>>> dojo1 = Dojo.objects.first()
+>>> dojo1.ninjas=Ninja.objects.get(id=1)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "/Users/catherinebose/Desktop/CodingDojo/PythonDojo/myEnvironments/djangoEnv/lib/python2.7/site-packages/django/db/models/fields/related_descriptors.py", line 500, in __set__
+    manager.set(value)
+  File "/Users/catherinebose/Desktop/CodingDojo/PythonDojo/myEnvironments/djangoEnv/lib/python2.7/site-packages/django/db/models/fields/related_descriptors.py", line 664, in set
+    objs = tuple(objs)
+TypeError: 'Ninja' object is not iterable
+>>> Ninja1 = Ninja.objects.get(id=1)
+>>> Ninja2 = Ninja.objects.get(id=2)
+>>> Ninja1.dojo = Dojo.objects.first()
+>>> Ninja2.dojo = Dojo.objects.first()
+>>> Dojo.objects.first().ninjas.all()
+<QuerySet []>
+>>> Ninja1.save()
+>>> Ninja2.save()
+>>> Dojo.objects.first().ninjas.all()
+<QuerySet [ninja object:: Newton Isaac , ninja object:: Newton Isaac ]>
+>>>>>> Ninja.objects.first().dojo
+Dojo Object :: CodingDojo Silicon Valley Mountain View CA
+
+
+--------------------
+>>> dojo1=Dojo.objects.get(id=1)
+>>> dojo1
+Dojo Object :: CodingDojo Silicon Valley Mountain View CA
+>>> dojo2=Dojo.objects.get(id=2)
+>>> dojo3=Dojo.objects.get(id=3)
+>>> Ninja.objects.create(first_name="Mary",last_name="Jane", dojo = dojo1)
+ninja object:: Mary Jane
+>>> Ninja.objects.create(first_name="Jack",last_name="Sprat", dojo = dojo2)
+ninja object:: Jack Sprat
+>>> Ninja.objects.create(first_name="Samantha",last_name="Drasher", dojo = dojo3)
+ninja object:: Samantha Drasher
+>>> Ninja.objects.create(first_name="Alice",last_name="Dreyer", dojo = dojo3)
+ninja object:: Alice Dreyer
+>>> Ninja.objects.create(first_name="Bob",last_name="Grey", dojo = dojo3)
+ninja object:: Bob Grey
+>>> Ninja.objects.create(first_name="Martha",last_name="Simpson", dojo = dojo1)
+ninja object:: Martha Simpson
+>>> Ninja.objects.create(first_name="Raja",last_name="sunder", dojo = dojo1)
+ninja object:: Raja sunder
+>>> dojo1.ninjas.all()
+<QuerySet [ninja object:: Mary Jane , ninja object:: Martha Simpson , ninja object:: Raja sunder ]>
+>>> dojo2.ninjas.all()
+<QuerySet [ninja object:: Jack Sprat ]>
+>>> dojo3.ninjas.all()
+<QuerySet [ninja object:: Samantha Drasher , ninja object:: Alice Dreyer , ninja object:: Bob Grey ]>
+
+-----------------
+desc = models.TextField(blank=True)
+start server again and perform migrations
+python manage.py shell
+
+>>> dojo1=Dojo.objects.get(id=1)
+>>> dojo2=Dojo.objects.get(id=2)
+>>> dojo3=Dojo.objects.get(id=3)
+>>> dojo1.desc("dojo1")
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+TypeError: 'unicode' object is not callable
+>>> dojo1
+Dojo Object :: CodingDojo Silicon Valley Mountain View CA
+>>> dojo1.desc
+u''
+>>> dojo1.desc.add("HI")
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'unicode' object has no attribute 'add'
+>>> dojo1.desc = "DOJO1"
+>>> dojo2.desc = "DOJO2"
+>>> dojo3.desc = "DOJO3"
+>>> Dojo.objects.all()
+<QuerySet [Dojo Object :: CodingDojo Silicon Valley Mountain View CA, Dojo Object :: CodingDojo SeattleSeattle WA, Dojo Object :: CodingDojo New York New York NY]>
+>>>
+>>> dojo1.save()
+>>> dojo2.save()
+>>> dojo3.save()
+ Dojo.objects.all()
+<QuerySet [Dojo Object :: CodingDojo Silicon Valley Mountain View CA DOJO1, Dojo Object :: CodingDojo Seattle Seattle WA DOJO2, Dojo Object :: CodingDojo New York New York NY DOJO3]>
