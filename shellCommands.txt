@@ -138,3 +138,117 @@ AttributeError: 'unicode' object has no attribute 'add'
 >>> dojo3.save()
  Dojo.objects.all()
 <QuerySet [Dojo Object :: CodingDojo Silicon Valley Mountain View CA DOJO1, Dojo Object :: CodingDojo Seattle Seattle WA DOJO2, Dojo Object :: CodingDojo New York New York NY DOJO3]>
+
+--------
+>>> from apps.book_authors.models import *
+>>> Book.objects.create(name="Java", desc="Java is a OOP language")
+Book Object :: Java Java is a OOP language
+>>> Book.objects.create(name="C sharp", desc="C sharp is a OOP language")
+Book Object :: C sharp C sharp is a OOP language
+>>> Book.objects.create(name="Python", desc="Python is a OOP language")
+Book Object :: Python Python is a OOP language
+>>> Book.objects.all()
+<QuerySet [Book Object :: Java Java is a OOP language, Book Object :: C sharp C sharp is a OOP language, Book Object :: Python Python is a OOP language]>
+>>> Book.objects.create(name="Ruby", desc="Ruby is a OOP language")
+Book Object :: Ruby Ruby is a OOP language
+>>> Book.objects.all()
+<QuerySet [Book Object :: Java Java is a OOP language, Book Object :: C sharp C sharp is a OOP language, Book Object :: Python Python is a OOP language, Book Object :: Ruby Ruby is a OOP language]>
+>>> Book.objects.all()
+<QuerySet [Book Object :: Java Java is a OOP language, Book Object :: C sharp C sharp is a OOP language, Book Object :: Python Python is a OOP language, Book Object :: Ruby Ruby is a OOP language]>
+>>> Author.objects.create(first_name="Jaden" last_name="Jade", email="jjade@gmail.com")
+  File "<console>", line 1
+    Author.objects.create(first_name="Jaden" last_name="Jade", email="jjade@gmail.com")
+                                                     ^
+SyntaxError: invalid syntax
+>>> book1 = Book.objects.get(id=1)
+>>> book1
+Book Object :: Java Java is a OOP language
+>>> book2 = Book.objects.get(id=2)
+>>> book3 = Book.objects.get(id=3)
+>>> book4 = Book.objects.get(id=4)
+
+----------
+Author.objects.create(first_name="Jaden", last_name="Jade", email="jjade@gmail.com",books = book1)
+Traceback (most recent call last):
+ValueError: "Author object:: Jaden Jade " needs to have a value for field "author" before this many-to-many relationship can be used.
+>>> Author.objects.create(first_name="Jaden", last_name="Jade", email="jjade@gmail.com")
+Author object:: Jaden Jade
+>>> Author.objects.create(first_name="Jessica", last_name="Simpson", email="jessi@gmail.com")
+Author object:: Jessica Simpson
+>>> Author.objects.create(first_name="Jacklyn", last_name="Fernandez", email="jacklyn@gmail.com")
+Author object:: Jacklyn Fernandez
+>>> Author.objects.create(first_name="Joshua", last_name="Seeps", email="josh@gmail.com")
+Author object:: Joshua Seeps
+//////Binding statement
+>>> Author.objects.get(id = 1).books.add(Book.objects.get(id=1))
+>>> Author.object.all()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: type object 'Author' has no attribute 'object'
+>>> Author.objects.all()
+<QuerySet [Author object:: Jaden Jade ]>
+>>> Author.objects.get(id=1)
+Author object:: Jaden Jade
+>>> Author.objects.get(id=1).books.all()
+<QuerySet [Book Object :: Java Java is a OOP language]>
+
+---------
+>>> book1 = Book.objects.get(id=1)
+>>> book2 = Book.objects.get(id=2)
+>>> book3 = Book.objects.get(id=3)
+>>> book4 = Book.objects.get(id=4)
+>>> book5 = Book.objects.get(id=5)
+>>> author1 = Author.objects.get(id=1)
+>>> author2 = Author.objects.get(id=2)
+>>> author3 = Author.objects.get(id=3)
+>>> author4 = Author.objects.get(id=4)
+>>> author5 = Author.objects.get(id=5)
+>>> author2.books.add(book5)
+>>> author2.books.add(book1)
+>>> author2.books.add(book3)
+>>> author3.books.add(book3)
+>>> author3.books.add(book1)
+>>> author3.books.add(book2)
+author5.books.add(book1,book2,book3,book4,book5)
+------------
+For the 3rd book, retrieve all the authors
+book3.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jaden Jade , Author object:: Jessica Simpson ,Author object:: Joshua Seeps ]>
+---------
+For the 3rd book, remove the first author
+>>> book3author1= book3.authors.first()
+>>> book3author1
+Author object:: Jaden Jade
+>>> book3author1.delete()
+(5, {u'book_authors.Author': 1, u'book_authors.Author_books': 4})
+>>> book3author1
+Author object:: Jaden Jade
+>>> book3.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jessica Simpson , Author object:: Joshua Seeps]>
+
+---------
+Assign the fourth author to the first 5 books (or in other words, all the books)
+author5 = Author.objects.get(id=5)
+book2 = Book.objects.get(id=2)
+>>> author5 = Author.objects.get(id=5)
+>>> book2.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jessica Simpson , Author object:: Joshua Seeps]>
+>>> book2.authors.add(author5)
+>>> book2.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jessica Simpson , Author object:: Joshua Seeps]>
+
+------------
+For the 2nd book, add the 5th author as one of the authors
+Find all the books that the 3rd author is part of
+Find all the books that the 2nd author is part of
+
+-----------
+book2 = Book.objects.get(id=2)
+>>> author5 = Author.objects.get(id=5)
+>>> book2.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jessica Simpson , Author object:: Joshua Seeps]>
+ Reverse remove()
+ book2.authors.remove(author5)
+>>> book2.authors.all()
+<QuerySet [Author object:: Janice Jack , Author object:: Jessica Simpson ]>
+
